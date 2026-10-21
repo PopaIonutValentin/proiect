@@ -9,4 +9,18 @@ const db = new DatabaseSync(path.join(FOLDER_DATE, 'retete.db'));
 
 db.exec('PRAGMA foreign_keys = ON;');
 
+db.exec
+(`
+    CREATE TABLE IF NOT EXISTS utilizatori 
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nume_utilizator TEXT NOT NULL UNIQUE COLLATE NOCASE,
+        email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+        parola_hash TEXT NOT NULL,
+        rol TEXT NOT NULL DEFAULT 'user' CHECK (rol IN ('user', 'admin')),
+        creat_la TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+    STRICT;
+`);
+
 module.exports;
