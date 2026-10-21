@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+require('./db');
 
 const PORT = Number(process.env.PORT) || 5000;
 const SESSION_SECRET = process.env.SESSION_SECRET;
