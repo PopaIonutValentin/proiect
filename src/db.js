@@ -33,4 +33,23 @@ db.exec
     STRICT;
 `)
 
-module.exports;
+db.exec
+(`
+    CREATE TABLE IF NOT EXISTS retete
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        autor_id INTEGER NOT NULL REFERENCES utilizatori(id) ON DELETE CASCADE,
+        categorie_id INTEGER REFERENCES categorii(id) ON DELETE SET NULL,
+        titlu TEXT NOT NULL,
+        poza TEXT,
+        vizibilitate TEXT NOT NULL DEFAULT 'public' CHECK (vizibilitate IN ('public', 'private')),
+        creat_la TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        actualizat_la TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+    STRICT;
+    
+    CREATE INDEX IF NOT EXISTS idx_retete_autor ON retete(autor_id);
+    CREATE INDEX IF NOT EXISTS idx_retete_categorie ON retete(categorie_id);
+`);
+
+module.exports = db;
