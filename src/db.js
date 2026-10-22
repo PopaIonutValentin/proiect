@@ -79,4 +79,22 @@ db.exec
     STRICT;
 `);
 
+db.exec
+(`
+    CREATE TABLE IF NOT EXISTS recenzii
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        reteta_id INTEGER NOT NULL REFERENCES retete(id) ON DELETE CASCADE,
+        autor_id INTEGER NOT NULL REFERENCES utilizatori(id) ON DELETE CASCADE,
+        nota INTEGER NOT NULL CHECK (nota BETWEEN 1 AND 5),
+        continut TEXT NOT NULL,
+        creat_la TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        actualizat_la TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (reteta_id, autor_id)
+    )
+    STRICT;
+
+    CREATE INDEX IF NOT EXISTS idx_recenzii_autor ON recenzii(autor_id);
+`);
+
 module.exports = db;
