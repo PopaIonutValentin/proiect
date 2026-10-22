@@ -52,4 +52,17 @@ db.exec
     CREATE INDEX IF NOT EXISTS idx_retete_categorie ON retete(categorie_id);
 `);
 
+db.exec
+(`
+    CREATE TABLE IF NOT EXISTS ingrediente
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        reteta_id INTEGER NOT NULL REFERENCES retete(id) ON DELETE CASCADE,
+        nume TEXT NOT NULL,
+        cantitate TEXT NOT NULL
+    )
+    STRICT;
+
+    CREATE INDEX IF NOT EXISTS idx_ingrediente_reteta ON ingrediente(reteta_id);
+`);
 module.exports = db;
