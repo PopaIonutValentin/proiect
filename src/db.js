@@ -31,7 +31,7 @@ db.exec
         nume TEXT NOT NULL UNIQUE COLLATE NOCASE
     )
     STRICT;
-`)
+`);
 
 db.exec
 (`
@@ -41,6 +41,7 @@ db.exec
         autor_id INTEGER NOT NULL REFERENCES utilizatori(id) ON DELETE CASCADE,
         categorie_id INTEGER REFERENCES categorii(id) ON DELETE SET NULL,
         titlu TEXT NOT NULL,
+        descriere TEXT NOT NULL,
         poza TEXT,
         vizibilitate TEXT NOT NULL DEFAULT 'public' CHECK (vizibilitate IN ('public', 'private')),
         creat_la TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
