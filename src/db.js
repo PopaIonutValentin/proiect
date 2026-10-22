@@ -65,4 +65,18 @@ db.exec
 
     CREATE INDEX IF NOT EXISTS idx_ingrediente_reteta ON ingrediente(reteta_id);
 `);
+
+db.exec
+(`
+    CREATE TABLE IF NOT EXISTS pasi
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        reteta_id INTEGER NOT NULL REFERENCES retete(id) ON DELETE CASCADE,
+        numar INTEGER NOT NULL CHECK (numar >= 1),
+        continut TEXT NOT NULL,
+        UNIQUE (reteta_id, numar)
+    )
+    STRICT;
+`);
+
 module.exports = db;
