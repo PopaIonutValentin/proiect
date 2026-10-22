@@ -23,4 +23,14 @@ db.exec
     STRICT;
 `);
 
+db.exec
+(`
+    CREATE TABLE IF NOT EXISTS categorii
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nume TEXT NOT NULL UNIQUE COLLATE NOCASE
+    )
+    STRICT;
+`)
+
 module.exports;
