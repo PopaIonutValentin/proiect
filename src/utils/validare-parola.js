@@ -44,7 +44,7 @@ function valideazaParola(parola, numeUtilizator)
 {
     if(typeof parola !== 'string')
     {
-        return 'Parola este obligatorie. ';
+        return 'Parola este obligatorie.';
     }
 
     const lungime =[...parola.normalize('NFC')].length;
