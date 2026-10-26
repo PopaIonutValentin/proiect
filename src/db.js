@@ -98,4 +98,19 @@ db.exec
     CREATE INDEX IF NOT EXISTS idx_recenzii_autor ON recenzii(autor_id);
 `);
 
+
+db.exec
+(`
+    CREATE TABLE IF NOT EXISTS sesiuni
+    (
+        sid TEXT PRIMARY KEY,
+        date TEXT NOT NULL,
+        expira_la INTEGER NOT NULL
+    )
+    STRICT;
+
+    CREATE INDEX IF NOT EXISTS idx_sesiuni_expira ON sesiuni(expira_la);
+`);
+
+
 module.exports = db;
