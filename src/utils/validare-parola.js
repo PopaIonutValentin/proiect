@@ -1,6 +1,14 @@
 const lungimeMinima = 15;
 const lungimeMaxima = 128;
 
+const CUVINTE_INTERZISE = new Set
+([
+    'petiegourmet', 'petie', 'gourmet',
+    'retete', 'retata', 'recipe', 'recipes',
+    'parola', 'parolamea', 'password',
+    'admin', 'administrator', 'qwerty', 'iloveyou'
+]);
+
 function esteRepetitie(text)
 {
     return /^([\s\S]+?)\1+$/.test(text);
@@ -40,6 +48,11 @@ function esteSecventa(text)
     return true;
 }
 
+function doarLitere(text)
+{
+    return text.replace(/[^\p{L}]/gu, '');
+}
+
 function valideazaParola(parola, numeUtilizator)
 {
     if(typeof parola !== 'string')
@@ -65,10 +78,18 @@ function valideazaParola(parola, numeUtilizator)
         return 'Parola este prea previzibila (o secventa sau o repetitie). Incearca o fraza din mai multe cuvinte.';
     }
 
-    if (typeof numeUtilizator ==='string' && simplificata === numeUtilizator.toLowerCase())
+    const litere = doarLitere(simplificata);
+
+    if(CUVINTE_INTERZISE.has(litere))
+    {
+        return 'Parola este prea usor de ghicit. Incearca o fraza din mai multe cuvinte.';
+    }
+
+    if(typeof numeUtilizator === 'string' && litere !== '' && litere === doarLitere(numeUtilizator.toLowerCase()))
     {
         return 'Parola nu poate fi identica cu numele de utilizator.';
     }
+
 
     return null;
 }

@@ -36,3 +36,13 @@ test('accepta o fraza lunga', ()=>
 {
     assert.equal(valideazaParola('plimbare lunga prin parcul din oras', 'alexandra'),null);
 });
+
+test('respinge o parola usor de ghicit', () =>
+{
+    assert.match(valideazaParola('Parola123456789!', 'alexandra'), /usor de ghicit/);
+});
+
+test('respinge numele de utilizator cu cifre si simboluri',() =>
+{
+    assert.match(valideazaParola('alexandra2026!!!', 'alexandra'), /numele de utilizator/);
+});
