@@ -23,6 +23,7 @@ async function esteParolaScursa(parola)
 
         if(!raspuns.ok)
         {
+            console.warn('HIBP a raspuns cu codul', raspuns.status);
             return false;
         }
 
@@ -39,8 +40,9 @@ async function esteParolaScursa(parola)
         }
         return false;
     }
-    catch
+    catch (eroare)
     {
+        console.warn('Verificarea HIBP a esuat:', eroare.message);
         return false;
     }
 }
