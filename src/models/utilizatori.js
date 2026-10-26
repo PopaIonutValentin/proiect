@@ -3,6 +3,7 @@ const db = require ('../db');
 const cautaDupaNume = db.prepare('SELECT 1 FROM utilizatori WHERE nume_utilizator = ?');
 const cautaDUpaEmail = db.prepare('SELECT 1 FROM utilizatori WHERE email = ?');
 const inserare = db.prepare('INSERT INTO utilizatori (nume_utilizator, email, parola_hash) VALUES (?, ?, ?)');
+const cautaPentruLogin = db.prepare('SELECT id, parola_hash FROM utilizatori WHERE nume_utilizator = ?');
 
 function existaNumeUtilizator(numeUtilizator)
 {
@@ -20,4 +21,9 @@ function creeazaUtilizator(numeUtilizator, email, parolaHash)
     return Number(rezultat.lastInsertRowid);
 }
 
-module.exports = {existaNumeUtilizator, existaEmail, creeazaUtilizator}; 
+function gasesteUtilizatorPentruLogin(numeUtilizator)
+{
+    return cautaPentruLogin.get(numeUtilizator);
+}
+
+module.exports = {existaNumeUtilizator, existaEmail, creeazaUtilizator, gasesteUtilizatorPentruLogin}; 
