@@ -43,6 +43,30 @@ class StoreSQLite extends session.Store
             callback(eroare);
         }
     }
+    touch(sid, sesiune, callback)
+    {
+        try
+        {
+            prelungeste.run(calculeazaExpirarea(sesiune),sid);
+            callback(null);
+        }
+        catch(eroare)
+        {
+            callback(eroare);
+        }
+    }
+    destroy(sid, callback)
+    {
+        try
+        {
+            sterge.run(sid);
+            callback(null);
+        }
+        catch (eroare)
+        {
+            callback(eroare);
+        }
+    }
 }
 
 module.exports = StoreSQLite;
