@@ -90,6 +90,20 @@ router.post('/login', async (req,res,next) =>
     });
 });
 
+router.post('/logout', (req, res, next) =>
+{
+    req.session.destroy((eroare) =>
+    {
+        if (eroare)
+        {
+            return next(eroare);
+        }
+
+        res.clearCookie('sid');
+        res.json({ mesaj: 'Te-ai deconectat.'});
+    });
+});
+
 module.exports = router;
 
 

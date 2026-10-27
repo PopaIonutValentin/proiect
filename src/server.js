@@ -26,7 +26,7 @@ app.use(session
     secret: SESSION_SECRET,
     store: new StoreSQLite(),
     resave: false,
-    safeUninitialized: false,
+    saveUninitialized: false,
     rolling: true,
     cookie:
     {
