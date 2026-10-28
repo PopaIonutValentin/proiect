@@ -25,4 +25,19 @@ function doarLogat (req, res, next)
     next();
 }
 
-module.exports = {doarLogat};
+function doarAdmin(req, res, next)
+{
+    if(!req.utilizator)
+    {
+        return res.status(401).json({eroare: MESAJ_NEAUTENTIFICAT});
+    }
+
+    if(req.utilizator.rol !== 'admin')
+    {
+        return res.status(403).json({eroare: 'Nu ai permisiune pentru aceasta actiune. '})
+    }
+
+    next();
+}
+
+module.exports = {doarLogat, doarAdmin};

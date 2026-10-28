@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 require('./db');
 const rutaAutentificare = require('./routes/autentificare');
+const rutaAdmin = require('./routes/admin');
 const session = require('express-session');
 const StoreSQLite = require('./models/sesiuni');
 
@@ -38,6 +39,8 @@ app.use(session
 }));
 
 app.use('/api', rutaAutentificare);
+
+app.use('/api/admin', rutaAdmin);
 
 app.use((req, res) =>
 {
