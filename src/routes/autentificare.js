@@ -4,6 +4,8 @@ const {valideazaParola} = require('../utils/validare-parola');
 const {esteParolaScursa} = require('../utils/parola-scursa');
 const {hashParola, verificareParola} = require('../utils/parola');
 const utilizatori = require('../models/utilizatori');
+const {doarLogat} = require('../middleware/acces');
+
 
 const router = express.Router();
 
@@ -102,6 +104,12 @@ router.post('/logout', (req, res, next) =>
         res.clearCookie('sid');
         res.json({ mesaj: 'Te-ai deconectat.'});
     });
+});
+
+router.get('/eu', doarLogat, (req, res) => 
+{
+    res.set('Cache-Control', 'no-store')
+    res.json({utilizator: req.utilizator});
 });
 
 module.exports = router;
