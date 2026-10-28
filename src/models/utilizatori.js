@@ -4,6 +4,7 @@ const cautaDupaNume = db.prepare('SELECT 1 FROM utilizatori WHERE nume_utilizato
 const cautaDUpaEmail = db.prepare('SELECT 1 FROM utilizatori WHERE email = ?');
 const inserare = db.prepare('INSERT INTO utilizatori (nume_utilizator, email, parola_hash) VALUES (?, ?, ?)');
 const cautaPentruLogin = db.prepare('SELECT id, parola_hash FROM utilizatori WHERE nume_utilizator = ?');
+const cautaDupaId = db.prepare('SELECT id, nume_utilizator, email, rol FROM utilizatori WHERE id = ?');
 
 function existaNumeUtilizator(numeUtilizator)
 {
@@ -25,5 +26,8 @@ function gasesteUtilizatorPentruLogin(numeUtilizator)
 {
     return cautaPentruLogin.get(numeUtilizator);
 }
-
-module.exports = {existaNumeUtilizator, existaEmail, creeazaUtilizator, gasesteUtilizatorPentruLogin}; 
+function gasesteDupaId (id)
+{
+    return cautaDupaId.get(id);
+}
+module.exports = {existaNumeUtilizator, existaEmail, creeazaUtilizator, gasesteUtilizatorPentruLogin, gasesteDupaId}; 
