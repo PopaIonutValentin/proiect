@@ -40,4 +40,15 @@ function doarAdmin(req, res, next)
     next();
 }
 
-module.exports = {doarLogat, doarAdmin};
+function identificaUtilizatorul(req, res, next)
+{
+    const id = req.session?.utilizatorId;
+
+    if(id)
+    {
+        req.utilizator = utilizatori.gasesteDupaId(id);
+    }
+
+    next();
+}
+module.exports = {doarLogat, doarAdmin,identificaUtilizatorul};
