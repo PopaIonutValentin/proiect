@@ -17,6 +17,8 @@ const FEREASTRA_LOGIN_MS = 15*60*1000;
 const MAXIM_PE_NUME = 5;
 const MAXIM_PE_IP = 20;
 const MESAJ_PREA_MULTE = 'Prea multe incercari. Incearca din nou mai tarziu.';
+const FEREASTRA_INREGISTRARE_MS = 60*60*1000;
+const MAXIM_INREGISTRARE_PE_IP = 5;
 
 router.post('/inregistrare', async (req, res) =>
 {
@@ -30,6 +32,15 @@ router.post('/inregistrare', async (req, res) =>
     {
         return res.status(400).json({eroare});
     }
+
+    const ip = req.ip;
+
+    if(incercari.numaraIncercari('inregistrare_ip', ip, FEREASTRA_INREGISTRARE_MS) >= MAXIM_INREGISTRARE_PE_IP)
+    {
+        return res.status(429).json({eroare: MESAJ_PREA_MULTE});
+    }
+
+    incercari.inregistreazaIncercare('inregistrare_ip', ip);
 
     if (utilizatori.existaNumeUtilizator(numeUtilizator))
     {
