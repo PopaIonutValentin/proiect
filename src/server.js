@@ -3,8 +3,10 @@ const helmet = require('helmet');
 require('./db');
 const rutaAutentificare = require('./routes/autentificare');
 const rutaAdmin = require('./routes/admin');
+const rutaRetete = require('./routes/retete');
 const session = require('express-session');
 const StoreSQLite = require('./models/sesiuni');
+
 
 const PORT = Number(process.env.PORT) || 5000;
 const SESSION_SECRET = process.env.SESSION_SECRET;
@@ -41,6 +43,8 @@ app.use(session
 app.use('/api', rutaAutentificare);
 
 app.use('/api/admin', rutaAdmin);
+
+app.use('/api/retete', rutaRetete);
 
 app.use((req, res) =>
 {

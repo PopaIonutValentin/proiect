@@ -7,7 +7,7 @@ function verificaText(valoare, nume, min, max)
 {
     if(typeof valoare !== 'string')
     {
-        return `${nume} este obligatoriu.`;
+        return `${nume} lipseste.`;
     }
 
     const numarCaractere = lungime(valoare.trim());
