@@ -112,5 +112,22 @@ db.exec
     CREATE INDEX IF NOT EXISTS idx_sesiuni_expira ON sesiuni(expira_la);
 `);
 
+db.exec
+(`
+    BEGIN;
+
+    CREATE TABLE IF NOT EXISTS incercari
+    (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tip TEXT NOT NULL CHECK (tip IN ('login_nume', 'login_ip', 'inregistrare_ip')),
+        cheie TEXT NOT NULL,
+        creat_la INTEGER NOT NULL
+    )
+    STRICT;
+
+    CREATE INDEX IF NOT EXISTS idx_incercari_cautate ON incercari (tip, cheie, creat_la);
+
+    COMMIT;   
+`);
 
 module.exports = db;
