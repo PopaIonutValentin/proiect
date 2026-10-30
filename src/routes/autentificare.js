@@ -5,6 +5,7 @@ const {esteParolaScursa} = require('../utils/parola-scursa');
 const {hashParola, verificareParola} = require('../utils/parola');
 const utilizatori = require('../models/utilizatori');
 const {doarLogat} = require('../middleware/acces');
+const incercari = require('../models/incercari');
 
 
 const router = express.Router();
@@ -12,6 +13,10 @@ const router = express.Router();
 const MESAJ_GENERAL = 'Nu s-a putut crea contul cu aceste date.';
 const MESAJ_LOGIN_GRESIT = 'Nume de utilizator sau parola gresita.';
 const hashFalsPromis = hashParola('parola-falsa-doar-pentru-timp-egal');
+const FEREASTRA_LOGIN_MS = 15*60*1000;
+const MAXIM_PE_NUME = 5;
+const MAXIM_PE_IP = 20;
+const MESAJ_PREA_MULTE = 'Prea multe incercari. Incearca din nou mai tarziu.';
 
 router.post('/inregistrare', async (req, res) =>
 {
@@ -59,19 +64,33 @@ router.post('/inregistrare', async (req, res) =>
 router.post('/login', async (req,res,next) =>
 {
     const { numeUtilizator, parola} = req.body ??{};
-
+   
     if(typeof numeUtilizator !== 'string' || typeof parola !== 'string')
     {
         return res.status(400).json({ eroare: MESAJ_LOGIN_GRESIT});
     }
+
+    const cheieNume = numeUtilizator.toLowerCase();
+    const ip = req.ip;
+
+    if(incercari.numaraIncercari('login_nume', cheieNume, FEREASTRA_LOGIN_MS) >= MAXIM_PE_NUME
+       || incercari.numaraIncercari('login_ip', ip, FEREASTRA_LOGIN_MS) >= MAXIM_PE_IP)
+    {
+        return res.status(429).json({ eroare: MESAJ_PREA_MULTE});
+    }
+
     const utilizator = utilizatori.gasesteUtilizatorPentruLogin(numeUtilizator);
     const hashDeVerificat = utilizator ? utilizator.parola_hash: await hashFalsPromis;
     const parolaCorecta = await verificareParola(parola, hashDeVerificat);
 
     if(!utilizator || !parolaCorecta)
     {
+        incercari.inregistreazaIncercare('login_nume', cheieNume);
+        incercari.inregistreazaIncercare('login_ip', ip);
         return res.status(401).json({eroare: MESAJ_LOGIN_GRESIT});
     }
+    incercari.stergeIncercari('login_nume', cheieNume);
+
     req.session.regenerate((eroare) =>
     {
         if (eroare)
