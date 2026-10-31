@@ -7,6 +7,18 @@ const router = express.Router();
 
 const MESAJ_NEGASITA = 'Reteta nu a fost gasita.';
 
+function citesteIdReteta(text)
+{
+    const id = Number(text);
+
+    if(Number.isSafeInteger(id)  && id >= 1)
+    {
+        return id;
+    }
+
+    return null;
+}
+
 function poateVedea(utilizator, reteta)
 {
     if (reteta.vizibilitate === 'public')
@@ -38,9 +50,9 @@ router.post('/', doarLogat, (req, res) =>
 
 router.get('/:id', identificaUtilizatorul, (req, res) =>
 {
-    const idReteta = Number(req.params.id);
+    const idReteta = citesteIdReteta(req.params.id);
 
-    if(!Number.isSafeInteger(idReteta) || idReteta < 1)
+    if(idReteta === null)
     {
         return res.status(404).json({eroare: MESAJ_NEGASITA});
     }
@@ -62,9 +74,9 @@ router.get('/:id', identificaUtilizatorul, (req, res) =>
 
 router.put('/:id', doarLogat, (req, res) =>
 {
-    const idReteta = Number(req.params.id);
+    const idReteta = citesteIdReteta(req.params.id);
 
-    if(!Number.isSafeInteger(idReteta) || idReteta < 1)
+    if(idReteta === null)
     {
         return res.status(404).json({eroare: MESAJ_NEGASITA});
     }
@@ -93,4 +105,29 @@ router.put('/:id', doarLogat, (req, res) =>
     res.json({mesaj: 'Reteta a fost actualizata.'});
 });
 
+router.delete('/:id', doarLogat, (req, res) =>
+{
+    const idReteta = citesteIdReteta(req.params.id);
+
+    if(idReteta === null)
+    {
+        return res.status(404).json({eroare: MESAJ_NEGASITA});
+    }
+
+    const proprietar = retete.gasesteProprietar(idReteta);
+
+    if(!proprietar || !poateVedea(req.utilizator, proprietar))
+    {
+        return res.status(404).json({eroare: MESAJ_NEGASITA});
+    }
+
+    if(proprietar.autor_id !== req.utilizator.id && req.utilizator.rol !== 'admin')
+    {
+        return res.status(403).json({eroare: 'Nu ai permisiunea sa stergi aceasta reteta.'});
+    }
+
+    retete.stergeReteta(idReteta);
+
+    res.json({mesaj: 'Reteta a fost stearsa.'});
+})
 module.exports = router;

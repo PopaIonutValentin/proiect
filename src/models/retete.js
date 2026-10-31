@@ -22,6 +22,7 @@ const actualizeazaDateleRetetei = db.prepare
 `);
 const stergeIngrediente = db.prepare('DELETE FROM ingrediente WHERE reteta_id = ?');
 const stergePasi = db.prepare('DELETE FROM pasi WHERE reteta_id = ?'); 
+const stergeRetetaDinBaza = db.prepare('DELETE FROM retete WHERE id = ?');
 
 function salveazaIngredienteSiPasi (retetaId, reteta)
 {
@@ -94,6 +95,11 @@ function actualizeazaReteta(id, reteta)
         db.exec('ROLLBACK');
         throw eroare;
     }
-
 }
-module.exports = {creeazaReteta, gasesteReteta, gasesteProprietar, actualizeazaReteta};
+
+function stergeReteta(id)
+{
+    stergeRetetaDinBaza.run(id);
+}
+
+module.exports = {creeazaReteta, gasesteReteta, gasesteProprietar, actualizeazaReteta, stergeReteta};
