@@ -60,4 +60,37 @@ router.get('/:id', identificaUtilizatorul, (req, res) =>
     res.json({reteta});
 });
 
+router.put('/:id', doarLogat, (req, res) =>
+{
+    const idReteta = Number(req.params.id);
+
+    if(!Number.isSafeInteger(idReteta) || idReteta < 1)
+    {
+        return res.status(404).json({eroare: MESAJ_NEGASITA});
+    }
+
+    const proprietar = retete.gasesteProprietar(idReteta);
+
+    if(!proprietar || !poateVedea(req.utilizator, proprietar))
+    {
+        return res.status(404).json({eroare: MESAJ_NEGASITA});
+    }
+
+    if(proprietar.autor_id !== req.utilizator.id)
+    {
+        return res.status(403).json({eroare: 'Poti modifica doar retetele tale.'});
+    }
+
+    const eroare = valideazaReteta(req.body);
+
+    if (eroare)
+    {
+        return res.status(400).json({eroare});
+    }
+
+    retete.actualizeazaReteta(idReteta, curataReteta(req.body));
+
+    res.json({mesaj: 'Reteta a fost actualizata.'});
+});
+
 module.exports = router;
