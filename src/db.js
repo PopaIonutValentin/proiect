@@ -5,7 +5,8 @@ const path = require('node:path');
 const FOLDER_DATE = path.join(__dirname, '..', 'data');
 fs.mkdirSync(FOLDER_DATE, { recursive: true });
 
-const db = new DatabaseSync(path.join(FOLDER_DATE, 'retete.db'));
+const FISIER_BAZA_DE_DATE = process.env.DB_FILE || path.join(FOLDER_DATE, 'retete.db');
+const db = new DatabaseSync(FISIER_BAZA_DE_DATE);
 
 db.exec('PRAGMA foreign_keys = ON;');
 
